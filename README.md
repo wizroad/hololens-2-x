@@ -26,7 +26,7 @@ app.run(host='192.168.0.3', port=5000)
    - Enabling Research Mode throuh the Device Portal
       - Settings > Update & Security > For developers > Developer Mode On & Device Portal On
       - Connect Hololens2 to Desktop with USB
-      - Device portal from Desktop browser (https://127.0.0.1:10080)]
+      - Device portal from Desktop browser (https://127.0.0.1:10080)
         - Set username and password
         - System > Recording mode, Research mode > Allow access to sensor streams check
 + For the project
