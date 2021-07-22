@@ -1,4 +1,6 @@
 # hololens-2-x
+This project is based on https://github.com/microsoft/HoloLens2ForCV/.
+Currently, only RGB(PV) stream is supported. Other research mode sensor stream will be updated soon.
 ## HttpServer
 ### Requirements
 >- flask
@@ -12,8 +14,6 @@ app.run(host='192.168.0.3', port=5000)
 
 ---------------------
 ## Hololens2StreamClient
-> This project is based on https://github.com/microsoft/HoloLens2ForCV/
-> Currently, only RGB(PV) stream is supported. Other research mode sensor stream will be updated soon.
 ### Preparation
 + For Windows 10 Desktop
    > https://docs.microsoft.com/ko-kr/windows/mixed-reality/develop/install-the-tools?tabs=unity
