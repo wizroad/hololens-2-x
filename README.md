@@ -12,7 +12,6 @@ line 31 in app.py
 app.run(host='192.168.0.3', port=5000)
 ```
 
----------------------
 ## Hololens2StreamClient
 ### Preparation
 + For Windows 10 Desktop
@@ -46,7 +45,7 @@ app.run(host='192.168.0.3', port=5000)
    - Open the project with Visual Studio.
    - Choose the ARM64 configuration option and select Device in the deployment target drop-down menu.
    - Start Debugging, you'll be prompted for a PIN.
-----------------------------------
+
 ## Start the server and hololens2 app - Hololens2StreamClient
   - Server
     ``` Python
