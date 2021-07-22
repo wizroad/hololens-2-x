@@ -63,5 +63,6 @@ app.run(host='192.168.0.3', port=5000)
     - Select yes for permission request
     - Press the Start button.
     
-    
+## Acknowledgment
+This work was supported by Institute of Information & communications Technology Planning & Evaluation (IITP) grant funded by the Korea government(MSIT) (No.2019-0-01270, WISE AR UI/UX Platform Development for Smartglasses)
 
