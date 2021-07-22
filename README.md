@@ -3,9 +3,9 @@ This project is based on https://github.com/microsoft/HoloLens2ForCV/.
 Currently, only RGB(PV) stream is supported. Other research mode sensor stream will be updated soon.
 ## HttpServer
 ### Requirements
->- flask
->  - opencv-python
->  - numpy
+   - flask
+  - opencv-python
+  - numpy
 ### Set server IP and Port Number
 line 31 in app.py 
 ``` Python
