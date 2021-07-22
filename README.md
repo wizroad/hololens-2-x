@@ -1,5 +1,5 @@
 # hololens-2-x
-This project is based on https://github.com/microsoft/HoloLens2ForCV/.
+This project is based on https://github.com/microsoft/HoloLens2ForCV/.  
 Currently, only RGB(PV) stream is supported. Other research mode sensor stream will be updated soon.
 ## HttpServer
 ### Requirements
@@ -19,8 +19,8 @@ app.run(host='192.168.0.3', port=5000)
    - Install Visual Studio 2019
    - Enable developer mode on your PC at Settings > Update & Security > For developers.
 + For Hololens2
-     > https://docs.microsoft.com/en-us/windows/mixed-reality/develop/platform-capabilities-and-apis/using-the-windows-device-portal
-     > https://docs.microsoft.com/en-us/windows/mixed-reality/develop/platform-capabilities-and-apis/research-mode
+     > https://docs.microsoft.com/en-us/windows/mixed-reality/develop/platform-capabilities-and-apis/using-the-windows-device-portal  
+     > https://docs.microsoft.com/en-us/windows/mixed-reality/develop/platform-capabilities-and-apis/research-mode  
    - windows update (build 19041.1364.VB_RELEASE_SVC_SYDNEY.200807-1600 or newer)
    - Enabling Research Mode throuh the Device Portal
       - Settings > Update & Security > For developers > Developer Mode On & Device Portal On
@@ -63,5 +63,5 @@ app.run(host='192.168.0.3', port=5000)
     - Press the Start button.
     
 ## Acknowledgment
-This work was supported by Institute of Information & communications Technology Planning & Evaluation (IITP) grant funded by the Korea government(MSIT) (No.2019-0-01270, WISE AR UI/UX Platform Development for Smartglasses)
-
+This work was supported by Institute of Information & communications Technology Planning & Evaluation (IITP) grant funded by the Korea government(MSIT) (No.2019-0-01270, WISE AR UI/UX Platform Development for Smartglasses)  
+This project is based on https://github.com/microsoft/HoloLens2ForCV/.  
