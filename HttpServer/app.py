@@ -9,17 +9,6 @@ height = 428
 
 imgnum = 0
 
-@app.route('/')
-def hello():
-    return 'Hello, world'
-
-@app.route('/method', methods=['GET','POST'])
-def method():
-    if request.method == 'GET':
-        return 'communicate with GET'
-    else:
-        return 'communicate with POST'
-
 @app.route('/Store', methods=['POST'])
 def Store():
     imgBuffer = request.data
