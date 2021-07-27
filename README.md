@@ -1,6 +1,6 @@
 # hololens-2-x
 This project is based on https://github.com/microsoft/HoloLens2ForCV/.  
-The project uses the POST method in HTTP request to obtain sensor data from HoloLens2 to the server.  
+The project uses the POST method in HTTP request to obtain sensor data stream from HoloLens2 to the server.  
 Currently, only RGB(PV) stream is supported. Other research mode sensor stream will be updated soon.
 ## HttpServer
 ### Requirements
