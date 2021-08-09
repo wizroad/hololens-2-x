@@ -8,7 +8,7 @@ Currently, only RGB(PV) stream is supported. Other research mode sensor stream w
   - opencv-python
   - numpy
 ### Set server IP and Port Number
-line 31 in app.py 
+The last line in app.py 
 ``` Python
 app.run(host='192.168.0.3', port=5000)
 ```
