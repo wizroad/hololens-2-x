@@ -1,7 +1,7 @@
 # hololens-2-x
 This project is based on https://github.com/microsoft/HoloLens2ForCV/.  
 The project uses the POST method in HTTP request to obtain sensor data stream from HoloLens2 to the server.  
-Currently, only RGB(PV) stream is supported. Other research mode sensor stream will be updated soon.
+(2021-08-09 Updated) Currently, RGB(PV) and Long Throw Depth(DLT) stream is supported. Other research mode sensor stream will be updated soon.
 ## HttpServer
 ### Requirements
    - flask
