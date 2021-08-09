@@ -349,6 +349,86 @@ void RMCameraReader::SaveDepth(IResearchModeSensorFrame* pSensorFrame, IResearch
     m_tarball->AddFile(outputDepthPath, &depthPgmData[0], depthPgmData.size());
 }
 
+
+void RMCameraReader::HttpDepth(IResearchModeSensorFrame* pSensorFrame, IResearchModeSensorDepthFrame* pDepthFrame)
+{
+    // Get resolution (will be used for PGM header)
+    ResearchModeSensorResolution resolution;
+    pSensorFrame->GetResolution(&resolution);
+
+    bool isLongThrow = (m_pRMSensor->GetSensorType() == DEPTH_LONG_THROW);
+
+    const UINT16* pAbImage = nullptr;
+    size_t outAbBufferCount = 0;
+    wchar_t outputAbPath[MAX_PATH];
+
+    const UINT16* pDepth = nullptr;
+    size_t outDepthBufferCount = 0;
+    wchar_t outputDepthPath[MAX_PATH];
+
+    const BYTE* pSigma = nullptr;
+    size_t outSigmaBufferCount = 0;
+
+    HundredsOfNanoseconds timestamp = m_converter.RelativeTicksToAbsoluteTicks(HundredsOfNanoseconds((long long)m_prevTimestamp));
+
+    if (isLongThrow)
+    {
+        winrt::check_hresult(pDepthFrame->GetSigmaBuffer(&pSigma, &outSigmaBufferCount));
+    }
+
+    winrt::check_hresult(pDepthFrame->GetAbDepthBuffer(&pAbImage, &outAbBufferCount));
+    winrt::check_hresult(pDepthFrame->GetBuffer(&pDepth, &outDepthBufferCount));
+
+    // Get header for AB and Depth (16 bits)
+    // Prepare the data to save for AB
+    const std::string abHeaderString = CreateHeader(resolution, 65535);
+    swprintf_s(outputAbPath, L"%llu_ab.pgm", timestamp.count());
+    std::vector<BYTE> abPgmData;
+    abPgmData.reserve(abHeaderString.size() + outAbBufferCount * sizeof(UINT16));
+    abPgmData.insert(abPgmData.end(), abHeaderString.c_str(), abHeaderString.c_str() + abHeaderString.size());
+
+    // Prepare the data to save for Depth
+    const std::string depthHeaderString = CreateHeader(resolution, 65535);
+    swprintf_s(outputDepthPath, L"%llu.pgm", timestamp.count());
+    std::vector<BYTE> depthPgmData;
+    depthPgmData.reserve(depthHeaderString.size() + outDepthBufferCount * sizeof(UINT16));
+    depthPgmData.insert(depthPgmData.end(), depthHeaderString.c_str(), depthHeaderString.c_str() + depthHeaderString.size());
+
+    assert(outAbBufferCount == outDepthBufferCount);
+    if (isLongThrow)
+        assert(outAbBufferCount == outSigmaBufferCount);
+    // Validate depth
+    for (size_t i = 0; i < outAbBufferCount; ++i)
+    {
+        UINT16 abVal;
+        UINT16 d;
+        const bool invalid = isLongThrow ? ((pSigma[i] & Depth::InvalidationMasks::Invalid) > 0) :
+            (pDepth[i] >= Depth::AHAT_INVALID_VALUE);
+        if (invalid)
+        {
+            d = 0;
+        }
+        else
+        {
+            d = pDepth[i];
+        }
+
+        abVal = pAbImage[i];
+
+        abPgmData.push_back((BYTE)(abVal >> 8));
+        abPgmData.push_back((BYTE)abVal);
+        depthPgmData.push_back((BYTE)(d >> 8));
+        depthPgmData.push_back((BYTE)d);
+    }
+
+    //hololens2Http.SendFrame(&abPgmData[0], abPgmData.size()); // IR frame, currently not used in server
+    hololens2Http.SendFrame(&depthPgmData[0], depthPgmData.size());
+
+
+    //m_tarball->AddFile(outputAbPath, &abPgmData[0], abPgmData.size());
+    //m_tarball->AddFile(outputDepthPath, &depthPgmData[0], depthPgmData.size());
+}
+
 void RMCameraReader::SaveVLC(IResearchModeSensorFrame* pSensorFrame, IResearchModeSensorVLCFrame* pVLCFrame)
 {        
     wchar_t outputPath[MAX_PATH];
@@ -399,7 +479,8 @@ void RMCameraReader::SaveFrame(IResearchModeSensorFrame* pSensorFrame)
 
 	if (pDepthFrame)
 	{		
-		SaveDepth(pSensorFrame, pDepthFrame);
+		//SaveDepth(pSensorFrame, pDepthFrame);
+		HttpDepth(pSensorFrame, pDepthFrame);
         pDepthFrame->Release();
 	}    
 }
