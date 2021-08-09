@@ -9,6 +9,31 @@ height = 428
 
 imgnum = 0
 
+d_w = 320
+d_h = 288
+d_headersize = 17
+dnum = 0
+
+# Long throw depth stream
+@app.route('/DLT', methods=['POST'])
+def DLT():
+    imgBuffer = request.data
+    image = np.frombuffer(imgBuffer[d_headersize:], dtype=np.uint16)
+    image = image.reshape((d_h, d_w, 1))
+    new_image = image
+
+    #####################################
+    # Write your code at here using new_image
+    # Sample code: write image file
+    #####################################
+    global dnum
+    cv2.imwrite('posted_depth\%d.png'%(dnum), new_image)
+    print('posted_depth\%d.png'%dnum + ' saved')
+    dnum += 1
+    ########################################
+    return 'DLT Success'
+
+# RGB image stream
 @app.route('/Store', methods=['POST'])
 def Store():
     imgBuffer = request.data
