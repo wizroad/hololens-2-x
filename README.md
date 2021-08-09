@@ -32,9 +32,10 @@ app.run(host='192.168.0.3', port=5000)
 + For the project
   - Open the project with Visual Studio.
   - Install NuGet package "rmt_curl" from Referece > Manage NuGet packages.
-  - Set the server IP and Port number at line 33 in CurlHttp.h
+  - Set the server IP and Port number at line 40 and 43 in CurlHttp.h
     ``` C++
     curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/Store");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/DLT");
     ```
 ### Bulid the project the first time
 > https://docs.microsoft.com/en-us/windows/mixed-reality/develop/platform-capabilities-and-apis/using-visual-studio?tabs=hl2
