@@ -23,14 +23,29 @@ public:
 	CURLcode res;
 	struct curl_slist* headers = NULL; // init to NULL is important
 
-	CurlHttp()
+	CurlHttp(int sensor_flag = 0)
 	{
+		// sensor_flag
+		// 0: RGB
+		// 1: DLT
+
 		curl = curl_easy_init();
 		headers = curl_slist_append(headers, "Content-Type: application/json");
 
 		if (curl) {
 			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-			curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/Store");
+			switch(sensor_flag)
+			{
+			case 0:
+				curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/Store");
+				break;
+			case 1:
+				curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/DLT");
+				break;
+			default:
+				fprintf(stderr, "unknown sensor flag: %d\n", sensor_flag);
+				break;
+			}
 		}
 	}
 
