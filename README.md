@@ -35,6 +35,7 @@ app.run(host='192.168.0.3', port=5000)
   - Set the server IP and Port number at line 40 and 43 in CurlHttp.h
     ``` C++
     curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/Store");
+    ...
     curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/DLT");
     ```
 ### Bulid the project the first time
