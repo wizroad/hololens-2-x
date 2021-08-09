@@ -66,6 +66,8 @@ public:
 		m_pWriteThread->join();
 	}	
 
+	CurlHttp hololens2Http{ 1 };
+	
 protected:
 	// Thread for retrieving frames
 	static void CameraUpdateThread(RMCameraReader* pReader, HANDLE camConsentGiven, ResearchModeSensorConsent* camAccessConsent);
