@@ -1,4 +1,5 @@
-//*********************************************************
+//***********
+// **********************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
@@ -19,6 +20,8 @@
 #include <winrt/Windows.Perception.Spatial.h>
 #include <winrt/Windows.Perception.Spatial.Preview.h>
 
+#include "CurlHttp.h"
+
 
 // Struct to store per-frame rig2world transformations
 // See also https://docs.microsoft.com/en-us/windows/mixed-reality/locatable-camera
@@ -32,6 +35,7 @@ struct FrameLocation
 class RMCameraReader
 {
 public:
+
 	RMCameraReader(IResearchModeSensor* pLLSensor, HANDLE camConsentGiven, ResearchModeSensorConsent* camAccessConsent, const GUID& guid)
 	{
 		m_pRMSensor = pLLSensor;
@@ -67,7 +71,7 @@ public:
 	}	
 
 	CurlHttp hololens2Http{ 1 };
-	
+
 protected:
 	// Thread for retrieving frames
 	static void CameraUpdateThread(RMCameraReader* pReader, HANDLE camConsentGiven, ResearchModeSensorConsent* camAccessConsent);
@@ -79,6 +83,8 @@ protected:
 	void SaveFrame(IResearchModeSensorFrame* pSensorFrame);
 	void SaveVLC(IResearchModeSensorFrame* pSensorFrame, IResearchModeSensorVLCFrame* pVLCFrame);
 	void SaveDepth(IResearchModeSensorFrame* pSensorFrame, IResearchModeSensorDepthFrame* pDepthFrame);
+	
+	void HttpDepth(IResearchModeSensorFrame* pSensorFrame, IResearchModeSensorDepthFrame* pDepthFrame);
 
 	void DumpCalibration();
 
