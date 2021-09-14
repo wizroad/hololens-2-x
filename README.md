@@ -2,15 +2,19 @@
 This project is based on https://github.com/microsoft/HoloLens2ForCV/.  
 The project uses the POST method in HTTP request to obtain sensor data stream from HoloLens2 to the server.  
 (2021-08-09 Updated) Currently, RGB(PV) and Long Throw Depth(DLT) stream is supported. Other research mode sensor stream will be updated soon.
+(2021-09-14 Updated) Now RGB(PV), Long Throw Depth(DLT) and IMU sensor stream is supported. IMU sensor data are sent by UDP socket.
+
 ## HttpServer
 ### Requirements
    - flask
   - opencv-python
   - numpy
 ### Set server IP and Port Number
-The last line in app.py 
+In app.py 
 ``` Python
-app.run(host='192.168.0.3', port=5000)
+    server_ip = "192.168.0.3"
+    server_udp_port = 9005
+    server_http_port = 5000
 ```
 
 ## Hololens2StreamClient
@@ -32,11 +36,16 @@ app.run(host='192.168.0.3', port=5000)
 + For the project
   - Open the project with Visual Studio.
   - Install NuGet package "rmt_curl" from Referece > Manage NuGet packages.
-  - Set the server IP and Port number at line 40 and 43 in CurlHttp.h
+  - Set the server IP and HTTP Port number at line 40 and 43 in CurlHttp.h
     ``` C++
     curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/Store");
     ...
     curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.0.3:5000/DLT");
+    ```
+    and the server IP and UDP Port number at line 8 and 9 in UdpSocket.h
+    ``` C++
+    #define serverIP "192.168.0.3"
+    #define PORT 9005
     ```
 ### Bulid the project the first time
 > https://docs.microsoft.com/en-us/windows/mixed-reality/develop/platform-capabilities-and-apis/using-visual-studio?tabs=hl2
@@ -53,7 +62,7 @@ app.run(host='192.168.0.3', port=5000)
   - Server
     ``` Python
     > python app.py
-    
+    server start
      * Running on http://192.168.0.3:5000/ (Press CTRL+C to quit)
      * Serving Flask app 'app' (lazy loading)
      * Environment: production
@@ -62,7 +71,7 @@ app.run(host='192.168.0.3', port=5000)
      * Debug mode: off
     ```
   - Hololens2StreamClient
-    - Select yes for permission request
+    - Select yes for permission requests
     - Press the Start button.
     
 ## Acknowledgment
