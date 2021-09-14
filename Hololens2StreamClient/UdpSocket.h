@@ -5,6 +5,7 @@
 #include <stdio.h>
 #pragma comment (lib, "ws2_32.lib")
 
+#define serverIP "192.168.0.3"
 #define PORT 9005
 #define PACKET_SIZE 1024
 
@@ -21,9 +22,7 @@ public:
 		server = socket(AF_INET, SOCK_DGRAM, 0);
 		 
 		addr.sin_family = AF_INET;
-		//addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-		addr.sin_addr.s_addr = inet_addr("192.168.0.3");
-		//addr.sin_addr.s_addr = htonl(INADDR_ANY);
+		addr.sin_addr.s_addr = inet_addr(serverIP);
 		addr.sin_port = htons(PORT);
 
 
@@ -48,5 +47,9 @@ public:
 	int SendFrame(uint8_t* bitmap, const size_t fileSize)
 	{
 		return sendto(server, (char*) bitmap, fileSize, 0, (sockaddr*)&addr, sizeof(addr));
+	}
+	int SendBytes(byte* bytearray, int size)
+	{
+		return sendto(server, (char*)bytearray, size, 0, (sockaddr*)&addr, sizeof(addr));
 	}
 };
