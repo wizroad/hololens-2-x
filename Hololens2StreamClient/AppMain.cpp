@@ -37,13 +37,15 @@ enum class ButtonID
 	DEPTH_LONG_THROW
 }*/
 // Note that concurrent access to AHAT and Long Throw is currently not supported
-std::vector<ResearchModeSensorType> AppMain::kEnabledRMStreamTypes = { ResearchModeSensorType::DEPTH_LONG_THROW };
+std::vector<ResearchModeSensorType> AppMain::kEnabledRMStreamTypes = { ResearchModeSensorType::DEPTH_LONG_THROW, 
+ResearchModeSensorType::IMU_ACCEL, ResearchModeSensorType::IMU_GYRO,  ResearchModeSensorType::IMU_MAG };
 /* Supported not-ResearchMode streams:
 {
 	PV,  // RGB
 	EYE  // Eye gaze tracking
 }*/
 std::vector<StreamTypes> AppMain::kEnabledStreamTypes = { StreamTypes::PV };
+//std::vector<StreamTypes> AppMain::kEnabledStreamTypes = { };
 
 
 AppMain::AppMain() :
@@ -84,6 +86,7 @@ AppMain::AppMain() :
 		m_scenario = std::make_unique<SensorScenario>(kEnabledRMStreamTypes);
 		m_scenario->InitializeSensors();
 		m_scenario->InitializeCameraReaders();
+		m_scenario->InitializeImuReaders();
 	}	
 
 	for (int i = 0; i < kEnabledStreamTypes.size(); ++i)
@@ -101,6 +104,7 @@ AppMain::AppMain() :
 
 void AppMain::Update()
 {
+
 	float frameDelta = m_frameDeltaTimer.GetTime();
 	m_frameDeltaTimer.Reset();
 
@@ -110,8 +114,8 @@ void AppMain::Update()
 	auto startButton = m_menu.GetButton((unsigned)ButtonID::Start);
 	auto stopButton = m_menu.GetButton((unsigned)ButtonID::Stop);
 	startButton->SetDisabled(m_recording || (!IsVideoFrameProcessorWantedAndReady()));
+	//startButton->SetDisabled(m_recording);
 	stopButton->SetDisabled(!m_recording);
-
 	const XMVECTOR headPosition = m_mixedReality.GetHeadPosition();
 	const XMVECTOR headForward = m_mixedReality.GetHeadForwardDirection();
 	const XMVECTOR headUp = m_mixedReality.GetHeadUpDirection();
@@ -312,6 +316,8 @@ winrt::Windows::Foundation::IAsyncAction AppMain::InitializeVideoFrameProcessorA
 	}
 
 	co_await m_videoFrameProcessor->InitializeAsync();
+
+
 }
 
 bool AppMain::IsVideoFrameProcessorWantedAndReady() const
