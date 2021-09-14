@@ -1,7 +1,7 @@
 # hololens-2-x
 This project is based on https://github.com/microsoft/HoloLens2ForCV/.  
 The project uses the POST method in HTTP request to obtain sensor data stream from HoloLens2 to the server.  
-(2021-08-09 Updated) Currently, RGB(PV) and Long Throw Depth(DLT) stream is supported. Other research mode sensor stream will be updated soon.
+(2021-08-09 Updated) Currently, RGB(PV) and Long Throw Depth(DLT) stream is supported. Other research mode sensor stream will be updated soon.  
 (2021-09-14 Updated) Now RGB(PV), Long Throw Depth(DLT) and IMU sensor stream is supported. IMU sensor data are sent by UDP socket.
 
 ## HttpServer
