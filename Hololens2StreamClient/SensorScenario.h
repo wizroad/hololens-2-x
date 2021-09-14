@@ -13,7 +13,7 @@
 
 #include "researchmode\ResearchModeApi.h"
 #include "RMCameraReader.h"
-
+#include "RMImuReader.h"
 
 class SensorScenario
 {
@@ -22,16 +22,19 @@ public:
 	virtual ~SensorScenario();
 
 	void InitializeSensors();
-	void InitializeCameraReaders();	
+	void InitializeCameraReaders();
+	void InitializeImuReaders();
 	void StartRecording(const winrt::Windows::Storage::StorageFolder& folder, const winrt::Windows::Perception::Spatial::SpatialCoordinateSystem& worldCoordSystem);
 	void StopRecording();
 	static void CamAccessOnComplete(ResearchModeSensorConsent consent);
+	static void ImuAccessOnComplete(ResearchModeSensorConsent consent);
 
 private:
 	void GetRigNodeId(GUID& outGuid) const;
 
 	const std::vector<ResearchModeSensorType>& m_kEnabledSensorTypes;
 	std::vector<std::shared_ptr<RMCameraReader>> m_cameraReaders;
+	std::vector<std::shared_ptr<RMImuReader>> m_imuReaders;
 
 	IResearchModeSensorDevice* m_pSensorDevice = nullptr;
 	IResearchModeSensorDeviceConsent* m_pSensorDeviceConsent = nullptr;
@@ -43,5 +46,10 @@ private:
 	IResearchModeSensor* m_pLLCameraSensor = nullptr;
 	IResearchModeSensor* m_pRRCameraSensor = nullptr;
 	IResearchModeSensor* m_pLTSensor = nullptr;
-	IResearchModeSensor* m_pAHATSensor = nullptr;		
+	IResearchModeSensor* m_pAHATSensor = nullptr;
+
+	IResearchModeSensor* m_pAccelSensor = nullptr;
+	IResearchModeSensor* m_pGyroSensor = nullptr;
+	IResearchModeSensor* m_pMagSensor = nullptr;
+
 };
