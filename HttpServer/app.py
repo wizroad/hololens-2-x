@@ -49,7 +49,9 @@ def UDPserver(ip, port):
 @app.route('/DLT', methods=['POST'])
 def DLT():
     imgBuffer = request.data
-    image = np.frombuffer(imgBuffer[d_headersize:], dtype=np.uint16)
+    dt = dt.newbyteorder('>')
+    image = np.frombuffer(imgBuffer[d_headersize:], dtype=dt)
+    image = image.astype(np.uint16)
     image = image.reshape((d_h, d_w, 1))
     new_image = image
 
