@@ -4,6 +4,9 @@ import numpy as np
 from socket import *
 import threading
 import struct
+####WSGI
+from gevent.pywsgi import WSGIServer
+from gevent import monkey
 
 app = Flask(__name__)
 
@@ -17,6 +20,11 @@ d_w = 320
 d_h = 288
 d_headersize = 17
 dnum = 0
+dabnum = 0
+
+ad_w = 512
+ad_h = 512
+adnum = 0
 
 # UDP server thread - receive IMU sensor stream
 def UDPserver(ip, port):
@@ -45,6 +53,28 @@ def UDPserver(ip, port):
 
     serverSocket.close()
 
+# AHAT(Articulated HAnd Tracking) depth stream
+@app.route('/AHAT', methods=['POST'])
+def AHAT():
+    imgBuffer = request.data
+    dt = np.dtype(np.uint16)
+    dt = dt.newbyteorder('>')
+    image = np.frombuffer(imgBuffer[d_headersize:], dtype=dt)
+    image = image.astype(np.uint16)
+    image = image.reshape((ad_h, ad_w, 1))
+    new_image = image
+
+    #####################################
+    # Write your code at here using new_image
+    # Sample code: write image file
+    #####################################
+    global adnum
+    cv2.imwrite('posted_ahat\%d.png'%(adnum), new_image)
+    print('posted_ahat\%d.png'%adnum + ' saved')
+    adnum += 1
+    ########################################
+    return 'AHAT Success'
+
 # Long throw depth stream
 @app.route('/DLT', methods=['POST'])
 def DLT():
@@ -64,6 +94,27 @@ def DLT():
     cv2.imwrite('posted_depth\%d.png'%(dnum), new_image)
     print('posted_depth\%d.png'%dnum + ' saved')
     dnum += 1
+    ########################################
+    return 'DLT Success'
+
+@app.route('/AB', methods=['POST'])
+def AB():
+    imgBuffer = request.data
+    dt = np.dtype(np.uint16)
+    dt = dt.newbyteorder('>')
+    image = np.frombuffer(imgBuffer[d_headersize:], dtype=dt)
+    image = image.astype(np.uint16)
+    image = image.reshape((d_h, d_w, 1))
+    new_image = image
+
+    #####################################
+    # Write your code at here using new_image
+    # Sample code: write image file
+    #####################################
+    global dabnum
+    cv2.imwrite('posted_depth_ab\%d.png'%(dabnum), new_image)
+    print('posted_depth_ab\%d.png'%dabnum + ' saved')
+    dabnum += 1
     ########################################
     return 'DLT Success'
 
@@ -94,4 +145,6 @@ if __name__=='__main__':
 
     t = threading.Thread(target=UDPserver, args=(server_ip, server_udp_port))
     t.start()
-    app.run(host=server_ip, port=server_http_port)
+    # app.run(host=server_ip, port=server_http_port)
+    http = WSGIServer((server_ip, server_http_port), app.wsgi_app)
+    http.serve_forever()
