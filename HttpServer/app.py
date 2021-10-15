@@ -6,6 +6,7 @@ import threading
 import struct
 ####WSGI
 from gevent.pywsgi import WSGIServer
+import gevent
 from gevent import monkey
 
 app = Flask(__name__)
@@ -26,13 +27,15 @@ ad_w = 512
 ad_h = 512
 adnum = 0
 
+seq = 101
+
 # UDP server thread - receive IMU sensor stream
 def UDPserver(ip, port):
     serverSocket = socket(AF_INET, SOCK_DGRAM)
     serverSocket.bind((ip, port))
     dataformat = 'ffffqffffffffff'
     data_name_list = ('MagZ', 'MagY', 'MagX', 'DeviceID', 'DeviceTime', 'ROTw', 'ROTz', 'ROTy', 'ROTx', 'Az', 'Ay', 'Ax', 'Gz', 'Gy', 'Gx')
-    print("server start")
+    print("UDP server start")
     while 1:
         try:
             data, info = serverSocket.recvfrom(2048)
@@ -47,6 +50,7 @@ def UDPserver(ip, port):
                     print("%s: %f / "%(data_name_list[i], sensordata[i]),end='')
             else:
                 print("MSG is not IMU sensor stream")
+                print("MSG: %s"%data.decode('utf-16'))
         except:
             print("UDP packet receive error")
             break
@@ -69,11 +73,11 @@ def AHAT():
     # Sample code: write image file
     #####################################
     global adnum
-    cv2.imwrite('posted_ahat\%d.png'%(adnum), new_image)
+    cv2.imwrite('posted_%d\%d_ahat.png'%(seq,adnum), new_image)
     print('posted_ahat\%d.png'%adnum + ' saved')
     adnum += 1
     ########################################
-    return 'AHAT Success'
+    return ''
 
 # Long throw depth stream
 @app.route('/DLT', methods=['POST'])
@@ -95,7 +99,7 @@ def DLT():
     print('posted_depth\%d.png'%dnum + ' saved')
     dnum += 1
     ########################################
-    return 'DLT Success'
+    return ''
 
 @app.route('/AB', methods=['POST'])
 def AB():
@@ -104,7 +108,7 @@ def AB():
     dt = dt.newbyteorder('>')
     image = np.frombuffer(imgBuffer[d_headersize:], dtype=dt)
     image = image.astype(np.uint16)
-    image = image.reshape((d_h, d_w, 1))
+    image = image.reshape((ad_h, ad_w, 1))
     new_image = image
 
     #####################################
@@ -112,11 +116,11 @@ def AB():
     # Sample code: write image file
     #####################################
     global dabnum
-    cv2.imwrite('posted_depth_ab\%d.png'%(dabnum), new_image)
+    cv2.imwrite('posted_%d\%d_ahat_ab.png'%(seq,dabnum), new_image)
     print('posted_depth_ab\%d.png'%dabnum + ' saved')
     dabnum += 1
     ########################################
-    return 'DLT Success'
+    return ''
 
 # RGB image stream
 @app.route('/Store', methods=['POST'])
@@ -131,7 +135,7 @@ def Store():
     # Sample code: write image file
     #####################################
     global imgnum
-    cv2.imwrite('posted_images\%d.png'%(imgnum), new_image)
+    cv2.imwrite('posted_%d\%d_rgb.png'%(seq, imgnum), new_image)
     print('posted_images\%d.png'%imgnum + ' saved')
     imgnum += 1
     ########################################
@@ -147,4 +151,5 @@ if __name__=='__main__':
     t.start()
     # app.run(host=server_ip, port=server_http_port)
     http = WSGIServer((server_ip, server_http_port), app.wsgi_app)
+    print("HTTP server start")
     http.serve_forever()
