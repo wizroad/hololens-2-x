@@ -119,7 +119,7 @@ void RMCameraReader::CameraWriteThread(RMCameraReader* pReader)
             {
                 pReader->SaveFrame(pReader->m_pSensorFrame);
             }
-        }       
+        }
     }	
 }
 
@@ -421,7 +421,7 @@ void RMCameraReader::HttpDepth(IResearchModeSensorFrame* pSensorFrame, IResearch
         depthPgmData.push_back((BYTE)d);
     }
 
-    //hololens2Http.SendFrame(&abPgmData[0], abPgmData.size()); // IR frame, currently not used in server
+    hololens2Http_forAB.SendFrame(&abPgmData[0], abPgmData.size()); // IR frame
     hololens2Http.SendFrame(&depthPgmData[0], depthPgmData.size());
 
 
@@ -480,7 +480,7 @@ void RMCameraReader::SaveFrame(IResearchModeSensorFrame* pSensorFrame)
 	if (pDepthFrame)
 	{		
 		//SaveDepth(pSensorFrame, pDepthFrame);
-		HttpDepth(pSensorFrame, pDepthFrame);
+        HttpDepth(pSensorFrame, pDepthFrame);
         pDepthFrame->Release();
 	}    
 }

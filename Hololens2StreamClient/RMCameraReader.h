@@ -42,6 +42,12 @@ public:
 		m_pRMSensor->AddRef();
 		m_pSensorFrame = nullptr;
 
+		bool isLongThrow = (m_pRMSensor->GetSensorType() == DEPTH_LONG_THROW);
+		bool isAHAT = (m_pRMSensor->GetSensorType() == DEPTH_AHAT);
+		if (isLongThrow) hololens2Http.init(1);
+		if (isAHAT) hololens2Http.init(2);
+		hololens2Http_forAB.init(3);
+
 		// Get GUID identifying the rigNode to
 		// initialize the SpatialLocator
 		SetLocator(guid);
@@ -70,7 +76,8 @@ public:
 		m_pWriteThread->join();
 	}	
 
-	CurlHttp hololens2Http{ 1 };
+	CurlHttp hololens2Http;
+	CurlHttp hololens2Http_forAB;
 
 protected:
 	// Thread for retrieving frames
@@ -92,12 +99,13 @@ protected:
 	bool AddFrameLocation();
 	void DumpFrameLocations();
 
+	bool m_fExit = false;
+
 	// Mutex to access sensor frame
 	std::mutex m_sensorFrameMutex;
 	IResearchModeSensor* m_pRMSensor = nullptr;
 	IResearchModeSensorFrame* m_pSensorFrame = nullptr;
 
-	bool m_fExit = false;
 	std::thread* m_pCameraUpdateThread;
 	std::thread* m_pWriteThread;
 	

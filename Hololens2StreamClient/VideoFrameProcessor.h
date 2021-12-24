@@ -44,6 +44,7 @@ class VideoFrameProcessor
 public:
     VideoFrameProcessor()
     {
+        hololens2Http.init(0);
     }
 
     virtual ~VideoFrameProcessor()
